@@ -107,22 +107,22 @@ function drawTower (){
     ctx.strokeStyle = "deepskyblue";
     ctx.lineWidth = 3;
     ctx.beginPath()
-    ctx.moveTo(((TowerCenter)-L/2),Top)
+    ctx.moveTo(((TowerCenter)-L/2),Top-40)
     ctx.lineTo(((TowerCenter)-L/2),TowerBottom)
     ctx.stroke();
     ctx.beginPath()
-    ctx.moveTo(((TowerCenter)+L/2),Top)
+    ctx.moveTo(((TowerCenter)+L/2),Top-40)
     ctx.lineTo(((TowerCenter)+L/2),TowerBottom)
     ctx.stroke();
 
-    for (let index = 0; index < (TowerBottom/L-11); index++) {
+    for (let index = 0; index < (TowerBottom/L-9); index++) {
         ctx.beginPath()
-        ctx.moveTo(((TowerCenter)-L/2),Top+(L*index))
-        ctx.lineTo(((TowerCenter)+L/2),((L*index)+L+Top))
+        ctx.moveTo(((TowerCenter)-L/2),Top-L+(L*index))
+        ctx.lineTo(((TowerCenter)+L/2),((L*index)+Top))
         ctx.stroke();
         ctx.beginPath()
-        ctx.moveTo(((TowerCenter)+L/2),(L*index)+Top)
-        ctx.lineTo(((TowerCenter)-L/2),((L*index)+L+Top))
+        ctx.moveTo(((TowerCenter)+L/2),(L*index)+Top-L)
+        ctx.lineTo(((TowerCenter)-L/2),((L*index)+Top))
         ctx.stroke();
     }
 
@@ -173,8 +173,25 @@ function animate() {
     ctx.fillRect(0, 0, ctx.canvas.width, canvasHeight);
     ctx.fillStyle = "green";
     ctx.fillRect(0, canvasHeight*0.9, ctx.canvas.width, canvasHeight);
- 
+
+
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath()
+    ctx.moveTo(((TowerCenter)),Top-L)
+    ctx.lineTo(((TowerCenter)),(startHojd-HissHojd)*m+Top)
+    ctx.stroke();
+
+
+
+
     drawTower()
+
+    ctx.fillStyle = "gold";
+    ctx.beginPath()
+    ctx.arc(TowerCenter,Top-40,1*m,0, 2 * Math.PI);
+    ctx.fill()
+
     drawCarriage((startHojd-HissHojd)*m)
 
     
