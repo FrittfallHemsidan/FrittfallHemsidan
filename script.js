@@ -66,72 +66,6 @@ let luftmotstandet = -(C*P*A*(V**2))/2;
 let TotalKraft = luftmotstandet + TyngdKraft + S;
 let Acceleration = TotalKraft/TotalMassa;
 
-/*
-for T = StartTid:TidIntervall:slutTid  
-clf
-
-%%% GRAFIK
-axis([0 310 0 Axis])
-xlabel('Bredd [m]') 
-ylabel('Höjd [m]') 
-text(-50,Bromshojd,'Börjar Bromsa')
-text(200,Tak-20,"Hastighet = "+ V +" m/s")
-text(200,Tak-30,"Acceleration = " + Acceleration + " m/s^2")
-text(200,Tak-40,"Höjd = " + HissHojd + " m")
-text(200,Tak-50,"Tid = " + T + " s")
-rectangle('Position',[40 Tak+5 25 0.1])
-rectangle('Position',[52.5 HissHojd+5 0.1 Tak-HissHojd])
-rectangle('Position',[50 HissHojd 5 5])
-
-pause(0)
-%%%
-
-%%% Bromsar
-if HissHojd < Bromshojd
-luftmotstandet = -(C*P*A*V^2)/2;
-TotalKraft = luftmotstandet + TyngdKraft + S;
-
-Acceleration = TotalKraft/HissMassa;
-V = V + Acceleration*TidIntervall;
-HissHojd = HissHojd - V*TidIntervall;
-%%%
-
-%%% Bromsar inte
-else
-luftmotstandet = -(C*P*A*V^2)/2;
-TotalKraft = luftmotstandet + TyngdKraft;
-
-Acceleration = TotalKraft/HissMassa;
-V = V + Acceleration*TidIntervall;
-HissHojd = HissHojd - V*TidIntervall;
-%%%
-
-
-end
-
-if HissHojd < 0
-    disp("Krash")
-    break
-elseif V < 0
-    break
-
-axis([0 310 0 Axis])
-xlabel('Bredd [m]') 
-ylabel('Höjd [m]') 
-text(-50,Bromshojd,'Börjar Bromsa')
-text(200,Tak-20,"Hastighet = "+ V +" m/s")
-text(200,Tak-30,"Acceleration = " + Acceleration + " m/s^2")
-text(200,Tak-40,"Höjd = " + HissHojd + " m")
-text(200,Tak-50,"Tid = " + T + " s")
-rectangle('Position',[40 Tak+5 25 0.1])
-rectangle('Position',[52.5 HissHojd+5 0.1 Tak-HissHojd])
-rectangle('Position',[50 HissHojd 5 5])
-
-
-
- */
-
-
 
 let ascpet = height/width
 ctx.canvas.height = 2000
@@ -201,16 +135,21 @@ function drawCarriage(CurrentHeight){
 let startTid = 0
 
 Start.addEventListener("click" ,func => {
-
-    if (start){
-        start = false
-        
+    let isnum = /^\d+$/.test(MassaInput.value);
+    if (isnum) {
+        if (start){
+            start = false
+            
+        }
+        else{
+            start = true 
+            startTid = d.getTime()
+            
+            TotalMassa = HissMassa + Number(MassaInput.value)
+        }
     }
     else{
-        start = true 
-        startTid = d.getTime()
-        
-        TotalMassa = HissMassa + Number(MassaInput.value)
+        alert(`Hur mycket är ${MassaInput.value} kg?`)
     }
 })
 
@@ -228,15 +167,6 @@ function animate() {
     ctx.canvas.width  = canvasWidth*ascpet
 
     TowerCenter = ((ctx.canvas.width/2)+ctx.canvas.width*0.2)
-
-    // console.log( ctx.canvas.width, ctx.canvas.height)
-
-    // console.log(ascpet)
-
-    // ctx.canvas.height = height
-    // canvas.style.width=width;
-    // canvas.style.height=height;
-
 
 
     ctx.fillStyle = Bg;
@@ -299,6 +229,7 @@ function animate() {
     }
     else if (V < 0){
         let newd = new Date()
+        
         let exaktTid = newd.getTime() - startTid
         console.log(exaktTid)
         start=false
