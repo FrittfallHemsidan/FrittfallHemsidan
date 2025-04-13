@@ -149,7 +149,7 @@ Start.addEventListener("click" ,func => {
         }
     }
     else{
-        alert(`Hur mycket är ${MassaInput.value} kg?`)
+        alert(`Hur mycket är ${MassaInput.value} i kg?`)
     }
 })
 
