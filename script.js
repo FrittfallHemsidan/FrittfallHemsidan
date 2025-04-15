@@ -4,6 +4,9 @@ const canvas = document.querySelector("canvas")
 const Start = document.querySelector("#Start")
 const ctx = canvas.getContext("2d")
 const boom = document.getElementById("boom")
+const BG = document.getElementById("BG")
+const Bass = document.getElementById("Bass")
+const bildHiss = document.getElementById("hiss")
 const SpeedCont = document.querySelector("#Speed")
 const AccCont = document.querySelector("#Acc")
 const HojdCont = document.querySelector("#Hojd")
@@ -104,6 +107,7 @@ const m = ((TowerBottom-Top)/80)
 
 
 function drawTower (){
+    ctx.drawImage(Bass,TowerCenter-L*4,TowerBottom-20,L*8,L*4)
     ctx.strokeStyle = "deepskyblue";
     ctx.lineWidth = 3;
     ctx.beginPath()
@@ -129,8 +133,10 @@ function drawTower (){
 }
 
 function drawCarriage(CurrentHeight){
-    ctx.fillStyle = "darkslategray";
-    ctx.fillRect(TowerCenter-L,Top+CurrentHeight-L*1.5, L*2,L*1.5);
+    // ctx.fillStyle = "darkslategray";
+    // ctx.fillRect(TowerCenter-L,Top+CurrentHeight-L*1.5, L*2,L*1.5);
+
+    ctx.drawImage(bildHiss,TowerCenter-L,Top+CurrentHeight-L*1.5, L*2,L*1.5)
 }
 let startTid = 0
 
@@ -169,11 +175,17 @@ function animate() {
     TowerCenter = ((ctx.canvas.width/2)+ctx.canvas.width*0.2)
 
 
-    ctx.fillStyle = Bg;
-    ctx.fillRect(0, 0, ctx.canvas.width, canvasHeight);
-    ctx.fillStyle = "green";
-    ctx.fillRect(0, canvasHeight*0.9, ctx.canvas.width, canvasHeight);
+    // ctx.fillStyle = Bg;
+    // ctx.fillRect(0, 0, ctx.canvas.width, canvasHeight);
+    // ctx.fillStyle = "green";
+    // ctx.fillRect(0, canvasHeight*0.9, ctx.canvas.width, canvasHeight);
 
+    if (width > 500) {
+        ctx.drawImage(BG,0,0,2857*2,canvasHeight)
+    }
+    else {
+        ctx.drawImage(BG,-2100,0,2857*2,canvasHeight)
+    }
 
     ctx.strokeStyle = "black";
     ctx.lineWidth = 2.5;
