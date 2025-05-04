@@ -6,14 +6,18 @@
 body {
   width: 100vw;
   height: 100vh;
-  overflow: visible;
+  overflow-x: hidden;
   position: relative;
+  background: #97dbd8;
+}
+
+img {
+  visibility: hidden;
 }
 
 canvas {
   display: block;
   color: cornflowerblue;
-
   width: 100%;
   height: 100%;
 }
@@ -34,6 +38,7 @@ div {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 #Start {
@@ -60,6 +65,34 @@ div {
   background-color: rgb(0, 72, 139);
   font-size: 27px;
   flex-direction: column;
+}
+
+#FelAccPlot {
+  display: block;
+  overflow: hidden;
+  width: 20vw;
+  height: 500px;
+}
+
+#MalAccPlot {
+  display: block;
+  overflow: hidden;
+  width: 20vw;
+  height: 500px;
+}
+
+#AccPlot {
+  display: block;
+  overflow: hidden;
+  width: 20vw;
+  height: 500px;
+}
+
+#TryckPlot {
+  display: block;
+  overflow: hidden;
+  width: 20vw;
+  height: 500px;
 }
 
 @media only screen and (max-width: 600px) {
