@@ -13,6 +13,7 @@ const HojdCont = document.querySelector("#Hojd")
 const TidCont = document.querySelector("#Tid")
 const MassaInput = document.querySelector("#kg")
 
+
 const d = new Date();
 
 let boomradius = 1
@@ -32,16 +33,20 @@ const imageHeight = 40
 let BromsSkivaFriktion = 0.35;
 let BromsSkivaRadie = 0.5;
 
-let DistansfronAxeltillKolv = 0.45;
-let KolvArea = 0.01;
-let KolvTryck = 4.7*(10**6);
+let DistansfronAxeltillKolv = 0.6;
+let KolvArea = (0.25**2)*Math.PI;
+let KolvTryck =  0.1*(10^6);
 let KolvKraft = KolvArea * KolvTryck * 2; // 2st kolvar
+let MaxTryck = 20 * (10**5)
+let kP = 0.011 * (10**6) // P-koefficienten för PID reglering
+
 
 let SpoleRadie = 1;
 let HissMassa = 1000;
 let personMassa = 0
 let TotalMassa = HissMassa + personMassa
 const g = 9.82;
+
 
 //  Beräkna Spännkraft
 let MomentfronBromsskiva = -BromsSkivaFriktion*KolvKraft*DistansfronAxeltillKolv;
@@ -64,10 +69,12 @@ let A = 25; // tvärsnittsarea för en kub med sida 5m är 25m^2
 let P = 1.2041; // luft densitet
 
 
+// start Värden
 let TyngdKraft = g*TotalMassa;
 let luftmotstandet = -(C*P*A*(V**2))/2;
 let TotalKraft = luftmotstandet + TyngdKraft + S;
 let Acceleration = TotalKraft/TotalMassa;
+let MalAcc = 0
 
 
 let ascpet = height/width
@@ -78,11 +85,16 @@ let canvasWidth =  ctx.canvas.width
 let canvasHeight =  ctx.canvas.height
 
 
+// Lite listor för att plotta
+let SparadeFelAcc = [];
+let SparadeTryck = [];
+let SparadeAcc = [];
+let SparadeMalAcc = [];
+let SparadeHojd = [];
+let SparadeTid = [];
+
 
 let CarriageHeight = 0
-
-
-
 let Bg = ctx.createLinearGradient(0,0, 0,canvasHeight);
 
 Bg.addColorStop(0, "#0484fc")
@@ -152,6 +164,8 @@ Start.addEventListener("click" ,func => {
             startTid = d.getTime()
             
             TotalMassa = HissMassa + Number(MassaInput.value)
+            TyngdKraft = g*TotalMassa;
+            console.log(TotalMassa)
         }
     }
     else{
@@ -223,21 +237,51 @@ function animate() {
 
 
     if (start){
+        //console.log(HissHojd,V,Acceleration,TidIntervall)
     T += TidIntervall
+    // console.log(MomentfronBromsskiva,KolvKraft)
     //Bromsar
-    if (HissHojd < Bromshojd){
+
     
+
+    if (HissHojd < Bromshojd){
+        // console.log("startbromsa",T)
+       
+    MalAcc = (-1*(V**2))/(2*HissHojd) // Beräkna målacceleration
+    //console.log(`MalAcc: ${MalAcc}`)
+
+    // SIMULUERING
     luftmotstandet = -(C*P*A*(V**2))/2;
     TotalKraft = luftmotstandet + TyngdKraft + S;
-    
+    //console.log(`TotalKraftKomponenter: ${luftmotstandet} + ${TyngdKraft} + ${S}`)
     Acceleration = TotalKraft/TotalMassa;
+    // console.log(`Acceleration: ${Acceleration}`)
     V = V + Acceleration*TidIntervall;
+    // console.log(`Hastiget: ${V}`)
     HissHojd = HissHojd - V*TidIntervall;
+
+    //REGLERING  
+    let FelAcc = MalAcc-Acceleration // Beräkna felet
+    // console.log(`FelAcc: ${FelAcc}`)
+    //Beräkna nya bromskraften
+    // console.log(KolvTryck - kP*FelAcc)
+    KolvTryck = Math.min(KolvTryck - kP*FelAcc,MaxTryck);
+    // console.log(KolvTryck)
+    KolvKraft = KolvArea * KolvTryck * 2 // 2st kolvar
+    MomentfronBromsskiva = -BromsSkivaFriktion*KolvKraft*DistansfronAxeltillKolv;
+    S = MomentfronBromsskiva/SpoleRadie;
+       
+    SparadeFelAcc.push(FelAcc)
+    SparadeTryck.push(KolvTryck)
+    SparadeAcc.push(Acceleration)
+    SparadeMalAcc.push(MalAcc)
+    SparadeHojd.push(HissHojd)
+    SparadeTid.push(T)
     }
     //
 
     // Bromsar inte
-    else{
+    else {
     luftmotstandet = -(C*P*A*(V**2))/2;
     TotalKraft = luftmotstandet + TyngdKraft;
 
@@ -260,8 +304,72 @@ function animate() {
         let newd = new Date()
         
         let exaktTid = newd.getTime() - startTid
-        console.log(exaktTid)
+        console.log(`StopTid: ${exaktTid}`)
         start=false
+
+        const FelAccData = {
+            labels: SparadeTid,
+            datasets: [{
+              fill: false,
+              lineTension: 0,
+              backgroundColor: "rgba(0,0,255,1.0)",
+              borderColor: "rgba(0,0,255,1.0)",
+              data: SparadeFelAcc
+            }]
+          }
+          const MalAccData = {
+            labels: SparadeTid,
+            datasets: [{
+              fill: false,
+              lineTension: 0,
+              backgroundColor: "rgba(36,161,49,1.0)",
+              borderColor: "rgba(36, 161, 49, 0.9)",
+              data: SparadeMalAcc
+            }]
+          }
+          const AccPlotData = {
+            labels: SparadeTid,
+            datasets: [{
+              fill: false,
+              lineTension: 0,
+              backgroundColor: "rgba(162,73,17,1.0)",
+              borderColor: "rgba(162, 73, 17, 0.7)",
+              data: SparadeAcc
+            }]
+          }
+          const TryckData = {
+            labels: SparadeTid,
+            datasets: [{
+              fill: false,
+              lineTension: 0,
+              backgroundColor: "rgba(125,17,161,1.0)",
+              borderColor: "rgba(125, 17, 161, 0.5)",
+              data: SparadeTryck
+            }]
+          }
+
+        new Chart("FelAccPlot",{
+            type: "line",
+            data: FelAccData,
+            options: {legend: {display: false}}
+        })
+        new Chart("MalAccPlot",{
+            type: "line",
+            data: MalAccData,
+            options: {legend: {display: false}}
+        })
+        new Chart("AccPlot",{
+            type: "line",
+            data: AccPlotData,
+            options: {legend: {display: false}}
+        })
+        new Chart("TryckPlot",{
+            type: "line",
+            data: TryckData,
+            options: {legend: {display: false}}
+        })
+
+        //console.log(SparadeFelAcc,SparadeTryck,SparadeAcc,SparadeMalAcc,SparadeHojd)
     }
 }
 
