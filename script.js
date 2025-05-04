@@ -299,6 +299,68 @@ function animate() {
         HissHojd = -0.01
         let exaktTid = d.getTime() - startTid
         console.log(exaktTid)
+
+                const FelAccData = {
+            labels: SparadeTid,
+            datasets: [{
+              fill: false,
+              lineTension: 0,
+              backgroundColor: "rgba(0,0,255,1.0)",
+              borderColor: "rgba(0,0,255,1.0)",
+              data: SparadeFelAcc
+            }]
+          }
+          const MalAccData = {
+            labels: SparadeTid,
+            datasets: [{
+              fill: false,
+              lineTension: 0,
+              backgroundColor: "rgba(36,161,49,1.0)",
+              borderColor: "rgba(36, 161, 49, 0.9)",
+              data: SparadeMalAcc
+            }]
+          }
+          const AccPlotData = {
+            labels: SparadeTid,
+            datasets: [{
+              fill: false,
+              lineTension: 0,
+              backgroundColor: "rgba(162,73,17,1.0)",
+              borderColor: "rgba(162, 73, 17, 0.7)",
+              data: SparadeAcc
+            }]
+          }
+          const TryckData = {
+            labels: SparadeTid,
+            datasets: [{
+              fill: false,
+              lineTension: 0,
+              backgroundColor: "rgba(125,17,161,1.0)",
+              borderColor: "rgba(125, 17, 161, 0.5)",
+              data: SparadeTryck
+            }]
+          }
+
+        new Chart("FelAccPlot",{
+            type: "line",
+            data: FelAccData,
+            options: {legend: {display: false}}
+        })
+        new Chart("MalAccPlot",{
+            type: "line",
+            data: MalAccData,
+            options: {legend: {display: false}}
+        })
+        new Chart("AccPlot",{
+            type: "line",
+            data: AccPlotData,
+            options: {legend: {display: false}}
+        })
+        new Chart("TryckPlot",{
+            type: "line",
+            data: TryckData,
+            options: {legend: {display: false}}
+        })
     }
     else if (V < 0.01){
         let newd = new Date()
