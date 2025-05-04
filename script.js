@@ -300,7 +300,7 @@ function animate() {
         let exaktTid = d.getTime() - startTid
         console.log(exaktTid)
     }
-    else if (V < 0){
+    else if (V < 0.01){
         let newd = new Date()
         
         let exaktTid = newd.getTime() - startTid
