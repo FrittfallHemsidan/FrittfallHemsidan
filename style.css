@@ -69,28 +69,28 @@ div {
 
 #FelAccPlot {
   display: block;
-  overflow: hidden;
+  overflow: visible;
   width: 20vw;
   height: 500px;
 }
 
 #MalAccPlot {
   display: block;
-  overflow: hidden;
+  overflow: visible;
   width: 20vw;
   height: 500px;
 }
 
 #AccPlot {
   display: block;
-  overflow: hidden;
+  overflow: visible;
   width: 20vw;
   height: 500px;
 }
 
 #TryckPlot {
   display: block;
-  overflow: hidden;
+  overflow: visible;
   width: 20vw;
   height: 500px;
 }
