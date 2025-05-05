@@ -117,6 +117,102 @@ let TowerCenter = ((canvasWidth/2)+canvasWidth*0.2)
 let TowerBottom =  canvasHeight*0.95
 const m = ((TowerBottom-Top)/80)
 
+function plot(Felacc,Malacc,Acc,Tryck,Tid) {
+    const FelAccData = {
+        labels: Tid,
+        datasets: [{
+          label:"Fel Acceleration", 
+          fill: false,
+          lineTension: 0,
+          backgroundColor: "rgba(0,0,255,1.0)",
+          borderColor: "rgba(0,0,255,1.0)",
+          data: Felacc
+        }]
+      }
+      const MalAccData = {
+        labels: Tid,
+        datasets: [{
+          label:"Mål Acceleration",   
+          fill: false,
+          lineTension: 0,
+          backgroundColor: "rgba(36,161,49,1.0)",
+          borderColor: "rgba(36, 161, 49, 0.9)",
+          data: Malacc
+        }]
+      }
+      const AccPlotData = {
+        labels: Tid,
+        datasets: [{
+          label:"Acceleration", 
+          fill: false,
+          lineTension: 0,
+          backgroundColor: "rgba(162,73,17,1.0)",
+          borderColor: "rgba(162, 73, 17, 0.7)",
+          data: Acc
+        }]
+      }
+      const TryckData = {
+        labels: Tid,
+        datasets: [{
+          label:"Tryck",  
+          fill: false,
+          lineTension: 0,
+          backgroundColor: "rgba(125,17,161,1.0)",
+          borderColor: "rgba(125, 17, 161, 0.5)",
+          data: Tryck
+        }]
+      }
+
+    new Chart("FelAccPlot",{
+        type: "line",
+        data: FelAccData,
+        options: {legend: {display: false}, 
+                  plugins: {
+                        title: {
+                            display: true,
+                            text: 'Fel Acceleration'
+                               }
+        }}
+    })
+    new Chart("MalAccPlot",{
+        type: "line",
+        data: MalAccData,
+        options: {legend: {display: false},                      
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Mål Acceleration',
+                        padding: 40
+                        }
+}}
+    })
+    new Chart("AccPlot",{
+        type: "line",
+        data: AccPlotData,
+        options: {legend: {display: false},
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Acceleration',
+                        padding: 40
+                        }
+}}
+    })
+    new Chart("TryckPlot",{
+        type: "line",
+        data: TryckData,
+        options: {legend: {display: false},
+        plugins: {
+                    title: {
+                        display: true,
+                        text: 'Tryck',
+                        padding: 40
+                        },  
+},
+scales: {x:{ticks:{callback: function(val,index) {return index % 2 === 0 ? this.getLabelForValue(val) : '';}}}}
+}
+    })
+}
 
 function drawTower (){
     ctx.drawImage(Bass,TowerCenter-L*4,TowerBottom-20,L*8,L*4)
@@ -300,67 +396,7 @@ function animate() {
         let exaktTid = d.getTime() - startTid
         console.log(exaktTid)
 
-                const FelAccData = {
-            labels: SparadeTid,
-            datasets: [{
-              fill: false,
-              lineTension: 0,
-              backgroundColor: "rgba(0,0,255,1.0)",
-              borderColor: "rgba(0,0,255,1.0)",
-              data: SparadeFelAcc
-            }]
-          }
-          const MalAccData = {
-            labels: SparadeTid,
-            datasets: [{
-              fill: false,
-              lineTension: 0,
-              backgroundColor: "rgba(36,161,49,1.0)",
-              borderColor: "rgba(36, 161, 49, 0.9)",
-              data: SparadeMalAcc
-            }]
-          }
-          const AccPlotData = {
-            labels: SparadeTid,
-            datasets: [{
-              fill: false,
-              lineTension: 0,
-              backgroundColor: "rgba(162,73,17,1.0)",
-              borderColor: "rgba(162, 73, 17, 0.7)",
-              data: SparadeAcc
-            }]
-          }
-          const TryckData = {
-            labels: SparadeTid,
-            datasets: [{
-              fill: false,
-              lineTension: 0,
-              backgroundColor: "rgba(125,17,161,1.0)",
-              borderColor: "rgba(125, 17, 161, 0.5)",
-              data: SparadeTryck
-            }]
-          }
-
-        new Chart("FelAccPlot",{
-            type: "line",
-            data: FelAccData,
-            options: {legend: {display: false}}
-        })
-        new Chart("MalAccPlot",{
-            type: "line",
-            data: MalAccData,
-            options: {legend: {display: false}}
-        })
-        new Chart("AccPlot",{
-            type: "line",
-            data: AccPlotData,
-            options: {legend: {display: false}}
-        })
-        new Chart("TryckPlot",{
-            type: "line",
-            data: TryckData,
-            options: {legend: {display: false}}
-        })
+        plot(SparadeFelAcc,SparadeMalAcc,SparadeAcc,SparadeTryck,SparadeTid)
     }
     else if (V < 0.01){
         let newd = new Date()
@@ -369,67 +405,7 @@ function animate() {
         console.log(`StopTid: ${exaktTid}`)
         start=false
 
-        const FelAccData = {
-            labels: SparadeTid,
-            datasets: [{
-              fill: false,
-              lineTension: 0,
-              backgroundColor: "rgba(0,0,255,1.0)",
-              borderColor: "rgba(0,0,255,1.0)",
-              data: SparadeFelAcc
-            }]
-          }
-          const MalAccData = {
-            labels: SparadeTid,
-            datasets: [{
-              fill: false,
-              lineTension: 0,
-              backgroundColor: "rgba(36,161,49,1.0)",
-              borderColor: "rgba(36, 161, 49, 0.9)",
-              data: SparadeMalAcc
-            }]
-          }
-          const AccPlotData = {
-            labels: SparadeTid,
-            datasets: [{
-              fill: false,
-              lineTension: 0,
-              backgroundColor: "rgba(162,73,17,1.0)",
-              borderColor: "rgba(162, 73, 17, 0.7)",
-              data: SparadeAcc
-            }]
-          }
-          const TryckData = {
-            labels: SparadeTid,
-            datasets: [{
-              fill: false,
-              lineTension: 0,
-              backgroundColor: "rgba(125,17,161,1.0)",
-              borderColor: "rgba(125, 17, 161, 0.5)",
-              data: SparadeTryck
-            }]
-          }
-
-        new Chart("FelAccPlot",{
-            type: "line",
-            data: FelAccData,
-            options: {legend: {display: false}}
-        })
-        new Chart("MalAccPlot",{
-            type: "line",
-            data: MalAccData,
-            options: {legend: {display: false}}
-        })
-        new Chart("AccPlot",{
-            type: "line",
-            data: AccPlotData,
-            options: {legend: {display: false}}
-        })
-        new Chart("TryckPlot",{
-            type: "line",
-            data: TryckData,
-            options: {legend: {display: false}}
-        })
+       plot(SparadeFelAcc,SparadeMalAcc,SparadeAcc,SparadeTryck,SparadeTid)
 
         //console.log(SparadeFelAcc,SparadeTryck,SparadeAcc,SparadeMalAcc,SparadeHojd)
     }
