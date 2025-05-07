@@ -13,8 +13,11 @@
     <img id="boom" src="explosion.png" alt="" />
     <img id="BG" src="frittfallBakgrund.png" alt="" />
     <img id="Bass" src="bass.png" alt="" />
-    <img id="hiss" src="hiss.png" alt="" />
-    <div id="Start"><span>STARTA!</span></div>
+    <img id="hiss" src="newhiss.png" alt="" />
+    <div id="Start">
+      <span id="starttext">STARTA!</span
+      ><img id="moln1" src="moln1.png" alt="ERROR" />
+    </div>
     <div id="vikt">
       <input
         type="text"
@@ -29,11 +32,20 @@
     <div id="Fart">
       <span id="Speed">V</span><span id="Acc">A</span><span id="Hojd">H</span
       ><span id="Tid">T</span>
+      <img id="moln2" src="moln2.png" alt="ERROR" />
     </div>
-    <canvas id="FelAccPlot"></canvas>
-    <canvas id="MalAccPlot"></canvas>
-    <canvas id="AccPlot"></canvas>
-    <canvas id="TryckPlot"></canvas>
+    <div class="chart-container" id="one">
+      <canvas id="FelAccPlot"></canvas>
+    </div>
+    <div class="chart-container" id="two">
+      <canvas id="MalAccPlot"></canvas>
+    </div>
+    <div class="chart-container" id="three">
+      <canvas id="AccPlot"></canvas>
+    </div>
+    <div class="chart-container" id="four">
+      <canvas id="TryckPlot"></canvas>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>
