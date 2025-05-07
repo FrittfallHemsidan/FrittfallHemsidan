@@ -2,6 +2,7 @@
 
 const canvas = document.querySelector("canvas")
 const Start = document.querySelector("#Start")
+const StartText = document.querySelector("#starttext")
 const ctx = canvas.getContext("2d")
 const boom = document.getElementById("boom")
 const BG = document.getElementById("BG")
@@ -19,13 +20,15 @@ const d = new Date();
 let boomradius = 1
 let boomExpansion = 0.01
 let krash = false
+let StartaOm = false
 
-
-let speed = 0
 let start = false
 let width =  window.innerWidth
 let height =  window.innerHeight;
-
+let FelChart = new Chart("FelAccPlot")
+let MalChart = new Chart("MalAccPlot")
+let AccChart = new Chart("AccPlot")
+let TryckChart = new Chart("TryckPlot")
 
 const imageWidth = 120
 const imageHeight = 40
@@ -95,18 +98,18 @@ let SparadeTid = [];
 
 
 let CarriageHeight = 0
-let Bg = ctx.createLinearGradient(0,0, 0,canvasHeight);
+// let Bg = ctx.createLinearGradient(0,0, 0,canvasHeight);
 
-Bg.addColorStop(0, "#0484fc")
-Bg.addColorStop(0.1, "#0494fc")
-Bg.addColorStop(0.2, "#048cfc")
-Bg.addColorStop(0.3, "#0494fc")
-Bg.addColorStop(0.5, "#099ffc")
-Bg.addColorStop(0.6, "#44b7fc")
-Bg.addColorStop(0.7, "#5cccfc")
-Bg.addColorStop(0.89, "#9fe9fc")
-Bg.addColorStop(0.9, "#90e3fc")
-Bg.addColorStop(1, "#b4f2fc")
+// Bg.addColorStop(0, "#0484fc")
+// Bg.addColorStop(0.1, "#0494fc")
+// Bg.addColorStop(0.2, "#048cfc")
+// Bg.addColorStop(0.3, "#0494fc")
+// Bg.addColorStop(0.5, "#099ffc")
+// Bg.addColorStop(0.6, "#44b7fc")
+// Bg.addColorStop(0.7, "#5cccfc")
+// Bg.addColorStop(0.89, "#9fe9fc")
+// Bg.addColorStop(0.9, "#90e3fc")
+// Bg.addColorStop(1, "#b4f2fc")
 
 
 
@@ -118,7 +121,7 @@ let TowerBottom =  canvasHeight*0.95
 const m = ((TowerBottom-Top)/80)
 
 function plot(Felacc,Malacc,Acc,Tryck,Tid) {
-    const FelAccData = {
+    let FelAccData = {
         labels: Tid,
         datasets: [{
           label:"Fel Acceleration", 
@@ -129,7 +132,7 @@ function plot(Felacc,Malacc,Acc,Tryck,Tid) {
           data: Felacc
         }]
       }
-      const MalAccData = {
+      let MalAccData = {
         labels: Tid,
         datasets: [{
           label:"Mål Acceleration",   
@@ -140,7 +143,7 @@ function plot(Felacc,Malacc,Acc,Tryck,Tid) {
           data: Malacc
         }]
       }
-      const AccPlotData = {
+      let AccPlotData = {
         labels: Tid,
         datasets: [{
           label:"Acceleration", 
@@ -151,7 +154,7 @@ function plot(Felacc,Malacc,Acc,Tryck,Tid) {
           data: Acc
         }]
       }
-      const TryckData = {
+      let TryckData = {
         labels: Tid,
         datasets: [{
           label:"Tryck",  
@@ -163,7 +166,8 @@ function plot(Felacc,Malacc,Acc,Tryck,Tid) {
         }]
       }
 
-    new Chart("FelAccPlot",{
+        FelChart.destroy()
+        FelChart = new Chart("FelAccPlot",{
         type: "line",
         data: FelAccData,
         options: {legend: {display: false}, 
@@ -172,9 +176,16 @@ function plot(Felacc,Malacc,Acc,Tryck,Tid) {
                             display: true,
                             text: 'Fel Acceleration'
                                }
-        }}
+        },
+        scales: {x:{ticks:{callback: function(val,index) {return index % 3 === 0 ? this.getLabelForValue(val).toFixed(3) : '';}}}},
+        aspectRatio : 2|1,
+        responsive: true,
+        maintainAspectRatio: false
+    }
     })
-    new Chart("MalAccPlot",{
+
+    MalChart.destroy()
+    MalChart = new Chart("MalAccPlot",{
         type: "line",
         data: MalAccData,
         options: {legend: {display: false},                      
@@ -182,11 +193,22 @@ function plot(Felacc,Malacc,Acc,Tryck,Tid) {
                     title: {
                         display: true,
                         text: 'Mål Acceleration',
-                        padding: 40
+                        padding: 20
                         }
-}}
+},
+scales: {
+    x: {
+        beginAtZero:true,
+        ticks:{callback: function(val,index) {return index % 3 === 0 ? this.getLabelForValue(val).toFixed(3) : '';}}
+    }
+},
+aspectRatio : 2|1,
+responsive: true,
+maintainAspectRatio: false
+}
     })
-    new Chart("AccPlot",{
+    AccChart.destroy()
+    AccChart = new Chart("AccPlot",{
         type: "line",
         data: AccPlotData,
         options: {legend: {display: false},
@@ -194,11 +216,17 @@ function plot(Felacc,Malacc,Acc,Tryck,Tid) {
                     title: {
                         display: true,
                         text: 'Acceleration',
-                        padding: 40
+                        padding: 20
                         }
-}}
+},
+scales: {x:{ticks:{callback: function(val,index) {return index % 3 === 0 ? this.getLabelForValue(val).toFixed(3) : '';}}}},
+aspectRatio : 2|1,
+responsive: true,
+maintainAspectRatio: false
+}
     })
-    new Chart("TryckPlot",{
+    TryckChart.destroy()
+    TryckChart = new Chart("TryckPlot",{
         type: "line",
         data: TryckData,
         options: {legend: {display: false},
@@ -206,10 +234,13 @@ function plot(Felacc,Malacc,Acc,Tryck,Tid) {
                     title: {
                         display: true,
                         text: 'Tryck',
-                        padding: 40
+                        padding: 20
                         },  
 },
-scales: {x:{ticks:{callback: function(val,index) {return index % 2 === 0 ? this.getLabelForValue(val) : '';}}}}
+scales: {x:{ticks:{callback: function(val,index) {return index % 3 === 0 ? this.getLabelForValue(val).toFixed(3) : '';}}}},
+aspectRatio : 2|1,
+responsive: true,
+maintainAspectRatio: false
 }
     })
 }
@@ -252,8 +283,38 @@ Start.addEventListener("click" ,func => {
     let isnum = /^\d+$/.test(MassaInput.value);
     if (isnum) {
         if (start){
-            start = false
-            
+            start = false    
+        }
+        else if(StartaOm){
+            StartaOm = false 
+            start = true 
+            TotalMassa = HissMassa + Number(MassaInput.value)
+            TyngdKraft = g*TotalMassa;
+
+            T = 0
+
+            HissHojd = 80;
+            V = 0;
+            bromssandeAcceleration = 0;
+            KolvTryck =  0.1*(10^6);
+            KolvKraft = KolvArea * KolvTryck * 2; // 2st kolvar
+
+            SparadeFelAcc = [];
+            SparadeTryck = [];
+            SparadeAcc = [];
+            SparadeMalAcc = [];
+            SparadeHojd = [];
+            SparadeTid = [];
+
+            MomentfronBromsskiva = -BromsSkivaFriktion*KolvKraft*DistansfronAxeltillKolv;
+            S = MomentfronBromsskiva/SpoleRadie;
+            luftmotstandet = -(C*P*A*(V**2))/2;
+            TotalKraft = luftmotstandet + TyngdKraft + S;
+            Acceleration = TotalKraft/TotalMassa;
+            MalAcc = 0
+
+            boomradius = 1
+            boomExpansion = 0.01
         }
         else{
             start = true 
@@ -261,7 +322,8 @@ Start.addEventListener("click" ,func => {
             
             TotalMassa = HissMassa + Number(MassaInput.value)
             TyngdKraft = g*TotalMassa;
-            console.log(TotalMassa)
+
+    
         }
     }
     else{
@@ -397,6 +459,8 @@ function animate() {
         console.log(exaktTid)
 
         plot(SparadeFelAcc,SparadeMalAcc,SparadeAcc,SparadeTryck,SparadeTid)
+        StartText.innerHTML = "STARTA OM!"
+        StartaOm = true
     }
     else if (V < 0.01){
         let newd = new Date()
@@ -406,8 +470,9 @@ function animate() {
         start=false
 
        plot(SparadeFelAcc,SparadeMalAcc,SparadeAcc,SparadeTryck,SparadeTid)
-
-        //console.log(SparadeFelAcc,SparadeTryck,SparadeAcc,SparadeMalAcc,SparadeHojd)
+       StartText.innerHTML = "STARTA OM!"
+       StartaOm = true
+       
     }
 }
 
