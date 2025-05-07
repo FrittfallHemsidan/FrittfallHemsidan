@@ -8,6 +8,7 @@ const boom = document.getElementById("boom")
 const BG = document.getElementById("BG")
 const Bass = document.getElementById("Bass")
 const bildHiss = document.getElementById("hiss")
+const fylddbildHiss = document.getElementById("fyldhiss")
 const SpeedCont = document.querySelector("#Speed")
 const AccCont = document.querySelector("#Acc")
 const HojdCont = document.querySelector("#Hojd")
@@ -272,10 +273,13 @@ function drawTower (){
 }
 
 function drawCarriage(CurrentHeight){
-    // ctx.fillStyle = "darkslategray";
-    // ctx.fillRect(TowerCenter-L,Top+CurrentHeight-L*1.5, L*2,L*1.5);
 
-    ctx.drawImage(bildHiss,TowerCenter-L,Top+CurrentHeight-L*1.5, L*2,L*1.5)
+    if (TotalMassa == 1000) {
+        ctx.drawImage(bildHiss,TowerCenter-L,Top+CurrentHeight-L*1.5, L*2,L*1.5)
+    }
+    else{
+        ctx.drawImage(fylddbildHiss,TowerCenter-L,Top+CurrentHeight-L*1.5, L*2,L*1.5)
+    }
 }
 let startTid = 0
 
